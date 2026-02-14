@@ -1,0 +1,10 @@
+go 1.25.5
+
+use (
+	app
+	pkg/netclient
+	pkg/portmap
+	pkg/public
+	pkg/socks5
+	pkg/utils
+)

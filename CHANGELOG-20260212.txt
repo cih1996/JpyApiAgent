@@ -1,0 +1,26 @@
+ApiAgent 修复日志 2026-02-12
+============================
+
+修改文件：
+1. app/table/coreClass/centControlPlatform/httpFuc.go
+2. app/table/coreClass/centControlPlatform/Type.go
+3. app/table/coreClass/middleAgentRtc/syncSendMessage.go
+
+修复内容：
+
+1. httpGetDeviceList — msg 字段错误
+   - 原：成功时 msg=null（传了 nil error），失败时 msg 传 error 对象（JSON序列化异常）
+   - 改：成功返回 "success"，失败返回 err.Error()
+
+2. DevicesAndMiddleIds 结构体缺 JSON tag
+   - 原：返回 {"MiddleWareIds":...,"Devices":...}（大写）
+   - 改：返回 {"middleWareIds":...,"devices":...}（小写，加了json tag）
+
+3. 端口映射路由不匹配
+   - 文档用 app:"middleAgent" + fun:"portMapCreate/portMapStatus/portMapDelete"
+   - 服务端原来用 app:"portMap" + fun:"create/status/delete"
+   - 改：在 httpMiddleAgentSync 开头增加 portMap 命令转发，两种格式都支持
+
+4. SyncSendToDevice 错误信息混乱
+   - 原：日志写 "msg解码失败"，返回写 "json编码失败"，且不带具体 error
+   - 改：统一错误描述，附带具体 err.Error() 方便调试

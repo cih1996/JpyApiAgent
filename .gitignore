@@ -1,0 +1,12 @@
+# IDE
+.idea/
+
+# Build artifacts
+*.exe
+go_build_*
+
+# Temp
+tem/
+
+# Go workspace
+go.work.sum
