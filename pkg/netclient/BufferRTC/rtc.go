@@ -145,12 +145,16 @@ func (s *RtcClient) RemoteIp() (string, int) {
 	return "", 0
 }
 func (s *RtcClient) Close() error {
-	if s.Client != nil {
-		s.Client.SetOnChannelOpen(nil)
-		s.Client.SetOnChannelClose(nil)
-		s.Client.Close()
-		s.channel = nil
-		s.Client = nil
+	if s == nil {
+		return nil
+	}
+	client := s.Client
+	s.channel = nil
+	s.Client = nil
+	if client != nil {
+		client.SetOnChannelOpen(nil)
+		client.SetOnChannelClose(nil)
+		client.Close()
 	}
 	return nil
 }

@@ -518,6 +518,9 @@ func (s *Client) GetSignalState() bool {
 	return atomic.LoadInt32(&s.signalOnline) == 1
 }
 func (s *Client) Close() {
+	if s == nil {
+		return
+	}
 	if s.signal != nil {
 		_ = s.signal.Close()
 	}

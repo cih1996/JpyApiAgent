@@ -15,7 +15,7 @@ var s *sessionPkg.Session
 
 func main() {
 
-	_ = centControlPlatform.NewCore("minio.accjs.cn", "10003983fcece0c60311f7a738057eb2260181769675270297")
+	_ = centControlPlatform.NewCore("minio.accjs.cn", "10008de9ebe8314a3aa2cee99fda90358fba01774844540113")
 	//Server.Login()
 	////
 	////从集控中心更新设备列表

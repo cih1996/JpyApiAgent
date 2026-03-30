@@ -43,6 +43,9 @@ func (s *TypeInfo) ShutdownForReset() {
 	s.Rtc = nil
 	s.Code = 0
 	del(s.MiddlewareId)
+	if s.DelMiddleware != nil {
+		s.DelMiddleware(s.MiddlewareId)
+	}
 	s.WsClients.Range(func(key, value any) bool {
 		if client, ok := value.(*WsClient); ok {
 			_ = client.Close()

@@ -10,6 +10,9 @@ import (
 
 // CenterGetMiddlewareRtcToken 获取中间件控制打洞Token
 func (c *Core) CenterGetMiddlewareRtcToken(middlewareId uint64) (*rtcCtl.GetRtcTokenRes, *ErrPkg.Err) {
+	if c == nil || c.server.api == nil {
+		return nil, ErrPkg.NewErrE("集控平台 API 不可用", nil)
+	}
 	midId := int64(middlewareId)
 	midToken, err1 := c.server.api.RtcCtl.GetRtcToken(rtcCtl.GetRtcTokenReq{
 		TbProxyId: &midId,
@@ -24,6 +27,9 @@ func (c *Core) CenterGetMiddlewareRtcToken(middlewareId uint64) (*rtcCtl.GetRtcT
 
 // CenterGetPortMapSocket5RtcToken 获取设备端口映射打洞Token
 func (c *Core) CenterGetPortMapSocket5RtcToken(deviceId uint64) (*rtcCtl.GetDeviceRtcPortTokenRes, *ErrPkg.Err) {
+	if c == nil || c.server.api == nil {
+		return nil, ErrPkg.NewErrE("集控平台 API 不可用", nil)
+	}
 	device, ok := c.getDevice(deviceId)
 	if !ok {
 		return nil, ErrPkg.NewErrE("设备不存在", nil)
@@ -40,6 +46,9 @@ func (c *Core) CenterGetPortMapSocket5RtcToken(deviceId uint64) (*rtcCtl.GetDevi
 
 // CenterGetDeviceH264AudioRtcToken 获取设备串流控制打洞Token
 func (c *Core) CenterGetDeviceH264AudioRtcToken(deviceId uint64) (*rtcCtl.GetDeviceRtcTokenRes, *ErrPkg.Err) {
+	if c == nil || c.server.api == nil {
+		return nil, ErrPkg.NewErrE("集控平台 API 不可用", nil)
+	}
 	device, ok := c.getDevice(deviceId)
 	if !ok {
 		return nil, ErrPkg.NewErrE("设备不存在", nil)

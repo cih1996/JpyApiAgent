@@ -132,11 +132,6 @@ func (c *Core) CenterGetDeviceList() (*DevicesAndMiddleIds, error) {
 			c.saveMiddleWareId(publicStruct.GetMiddleIdFromDeviceId(device.DeviceId))
 			devices = append(devices, device)
 		}
-		mids := c.GetAllMiddleWareIds()
-		for t := 0; t < len(mids); t++ {
-			_, _ = c.CreatMiddlewareRtc(mids[t], nil, nil, nil)
-		}
-
 		list := DevicesAndMiddleIds{
 			MiddleWareIds: c.GetAllMiddleWareIds(),
 			Devices:       devices,

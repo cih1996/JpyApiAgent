@@ -62,7 +62,9 @@ func (s *TypeInfo) onOpen(conn NetClient.NetClient) {
 func (s *TypeInfo) onClose(conn NetClient.NetClient) {
 	s.SetCode(0, CodeMiddleAgentRtc断开连接, MsgMiddleAgentRtc断开连接)
 	if s.Rtc != nil {
-		err := s.Rtc.Close()
+		rtc := s.Rtc
+		s.Rtc = nil
+		err := rtc.Close()
 		if err != nil {
 			return
 		}
@@ -74,13 +76,21 @@ func (s *TypeInfo) onClose(conn NetClient.NetClient) {
 			s.TokenInfo = rec
 			s.Connect()
 		} else {
+			// 当 Core/API 已经被 Reset 清空时，这里不能继续递归重连，
+			// 否则会在失效会话上无限重试，甚至触发空指针。
 			logs.Error("中间件[%d]重连获取RtcToken失败,%s", s.MiddlewareId, err.Msg)
-			time.Sleep(5 * time.Second)
-			s.onClose(conn)
+			s.Reconnect = 1
+			del(s.MiddlewareId)
+			if s.DelMiddleware != nil {
+				s.DelMiddleware(s.MiddlewareId)
+			}
+			time.Sleep(100 * time.Millisecond)
 		}
 	} else {
 		del(s.MiddlewareId)
-		s.DelMiddleware(s.MiddlewareId)
+		if s.DelMiddleware != nil {
+			s.DelMiddleware(s.MiddlewareId)
+		}
 	}
 
 	//调用外部回调

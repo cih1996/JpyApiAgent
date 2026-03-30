@@ -39,6 +39,10 @@ func (c *Core) CreatMiddlewareRtc(MiddlewareId uint64, parOpen NetClient.Connect
 	var err1 *ErrPkg.Err
 	middleWare.TokenInfo, err1 = middleWare.GetToken(middleWare.MiddlewareId)
 	if err1 != nil {
+		// New(...) 会先把对象写入 middleAgentRtc 的全局表。
+		// 这里如果取 token 失败，必须同步清掉这个半初始化对象，
+		// 否则后续真实创建会撞上“对象已存在”。
+		middleWare.ShutdownForReset()
 		logs.Error("创建中间件[%d]对象失败%v", MiddlewareId, err1)
 		return nil, errors.New(fmt.Sprintf("创建中间件[%d]对象失败%v", MiddlewareId, err1))
 	}
